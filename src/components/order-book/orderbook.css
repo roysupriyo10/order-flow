@@ -1,8 +1,23 @@
-.order-book__wrapper {
+.order-book__container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  height: 500px;
+  overflow-y: scroll;
 }
 
+.bids {
+  background-color: #06ffd52a;
+}
+
+.asks {
+  background-color: #f5262628;
+}
+
+.order-book__list {
+  margin: 0;
+  padding: 0 1em;
+  list-style-type: none;
+}
 
 .order-book__list-item {
   display: flex;

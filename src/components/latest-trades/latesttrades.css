@@ -1,0 +1,13 @@
+.trade-list__container {
+  height: 500px;
+  overflow-y: scroll;
+}
+
+.trade-list__item {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.trade-list__item p {
+  text-align: center;
+}

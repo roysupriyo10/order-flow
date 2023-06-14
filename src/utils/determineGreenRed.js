@@ -1,1 +1,1 @@
-export const determineGreenRed = (boolean) => boolean ? '#089981' : 'f23645'
+export const determineGreenRed = (boolean) => boolean ? '#06ffd52a' : '#f5262628'
