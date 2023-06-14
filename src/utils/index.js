@@ -6,4 +6,5 @@ export { convertToInternationalCurrencySystem } from './convertToInternationalCu
 export { makeServerRequest } from './makeServerRequest'
 export { makeApiRequest } from './makeApiRequest'
 export { formatTime } from './formatTime'
+export { signQueryString } from './signQueryString'
 export { fapi, serverUrl } from './urls'
