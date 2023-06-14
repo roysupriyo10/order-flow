@@ -1,9 +1,10 @@
 import { createChart, CrosshairMode, ColorType } from "lightweight-charts"
 import { useState, useEffect, useRef } from "react"
-import { fapi } from "../../urls"
+import { fapi, serverUrl } from "../../urls"
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import addPositiveSign from "../../utils/addPositiveSign"
 import cutNumber from "../../utils/cutNumber"
+import axios from 'axios'
 
 const Chart = () => {
   const chartContainerRef = useRef()
@@ -112,8 +113,39 @@ const Chart = () => {
       const marketDataSocket = new ReconnectingWebSocket(`${fapi.wss}ws/btcusdt_perpetual@continuousKline_${chartTimeResolution}`)
 
       // function that will be called when the websocket connection is established
-      marketDataSocket.onopen = () => {
-        
+      marketDataSocket.onopen = async () => {
+        // make a request to fetch data from the local server
+        const response = await axios.request(
+          {
+            method: 'get',
+            maxBodyLength: Infinity,
+            params: {
+              timeFrame: chartTimeResolution,
+              baseUrl: fapi.rest
+            },
+            url: serverUrl + '/getAllData',
+            headers: { }
+          }
+        )
+        // await response and fetch the JSON part
+        const data = await response.data
+        // candlestick array to be set to the candleSeriesApi
+        const historicalCandles = data.map(candle => ({
+          time: ( candle[0] + 19800000 ) / 1000,
+          open: parseFloat(candle[1]),
+          high: parseFloat(candle[2]),
+          low: parseFloat(candle[3]),
+          close: parseFloat(candle[4])
+        }))
+        // volume bars to correspond with the candlesticks
+        const historicalVolume = data.map(candle => ({
+          time: ( candle[0] + 19800000 ) / 1000,
+          value: parseInt(candle[5]),
+          color: parseFloat(candle[4]) >= parseFloat(candle[1]) ? 'rgba(8, 153, 129, 0.5)' : 'rgba(242, 54, 69, 0.5)'
+        }))
+        // set the relevant data to the chart
+        candleSeriesApi.setData(historicalCandles)
+        volumeSeriesApi.setData(historicalVolume)
       }
 
       // function that will be called when a new message is received from the websocket
@@ -146,6 +178,15 @@ const Chart = () => {
 
         // console.log(change)
       }
+
+      setTimeout(() => {
+        chartApi.applyOptions(
+          {
+            handleScroll: true,
+            handleScale: true
+          }
+        )
+      }, 2000);
 
       return () => {
         chartApi.remove()
