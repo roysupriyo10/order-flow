@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { serverUrl } from "../urls"
+import { serverUrl } from "../utils"
 
 export const makeServerRequest = async (params, endPoint) => {
   let config = {

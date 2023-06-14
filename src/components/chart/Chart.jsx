@@ -1,6 +1,6 @@
 import { createChart, CrosshairMode, ColorType } from "lightweight-charts"
 import { useState, useEffect, useRef } from "react"
-import { fapi, serverUrl } from "../../urls"
+import { fapi, serverUrl } from "../../utils/"
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import { cutNumber, addPositiveSign, calcCountdown, determineGreenRed, convertToInternationalCurrencySystem } from "../../utils"
 import axios from 'axios'
