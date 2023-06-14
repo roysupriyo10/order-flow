@@ -28,7 +28,7 @@ const OrderBook = () => {
       getDepthSnapshot()
       setInterval(() => {
         getDepthSnapshot()
-      }, 1000 * 10);
+      }, 1000 * 15);
     },
     []
   )
@@ -66,15 +66,13 @@ const OrderBook = () => {
   const bids = orderBook.bids.map(bid => (<li key={uuidv4()} className='order-book__list-item'><p>{bid[0]}</p><p>{bid[1]}</p></li>))
 
   return (
-    <div className='order-book__wrapper'>
+    <div className='order-book__container'>
       <div>
-        <h2>Bids</h2>
         <ul className='order-book__list'>
           {...bids}
         </ul>
       </div>
       <div>
-        <h2>Asks</h2>
         <ul className='order-book__list'>
           {...asks}
         </ul>

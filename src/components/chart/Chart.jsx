@@ -256,7 +256,7 @@ const Chart = () => {
   )
 
   return (
-    <div ref={chartContainerRef}></div>
+    <div ref={chartContainerRef} className="chart__container"></div>
   )
 }
 
