@@ -8,6 +8,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 src/components/order-book/depth-btcusdt-1000.json
+src/components/order-book/depth.js
 
 node_modules
 dist
