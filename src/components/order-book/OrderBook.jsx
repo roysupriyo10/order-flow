@@ -28,19 +28,19 @@ export const OrderBook = ({ orderBook, setOrderBook, latestCandle }) => {
     )
   )
   const bids = orderBook.bids.sort((a, b) => Number(a[0]) < Number(b[0])).map(
-    bid => (
+    (bid, index) => (
       <li key={uuidv4()} className='order-book__list-item'>
-        <p>{ cutNumber(bid[0], 1) }</p>
+        <p>{ cutNumber(orderBook.bids[orderBook.bids.length - 1 - index][0], 1) }</p>
         <p
           className={`${
-            findRelativePercentage(bid[0], latestCandle.open) >= 0
+            findRelativePercentage(orderBook.bids[orderBook.bids.length - 1 - index][0], latestCandle.open) >= 0
             ?
             'green'
             :
             'red'
           }`}
-        >{(findRelativePercentage(bid[0], latestCandle.open) >= 0 ? '+' : '') + cutNumber(findRelativePercentage(bid[0], latestCandle.open), 2) }</p>
-        <p>{ bid[1] }</p>
+        >{(findRelativePercentage(orderBook.bids[orderBook.bids.length - 1 - index][0], latestCandle.open) >= 0 ? '+' : '') + cutNumber(findRelativePercentage(orderBook.bids[orderBook.bids.length - 1 - index][0], latestCandle.open), 2) }</p>
+        <p>{ orderBook.bids[orderBook.bids.length - 1 - index][1] }</p>
       </li>
     )
   )

@@ -17,7 +17,7 @@ export const LatestTrades = ({ recentTrades, setRecentTrades }) => {
             time: formatTime(trade.time),
             price: trade.price,
             amount: trade.quoteQty,
-            color: index !== 0 ? determineGreenRed(Number(trade.price) > Number(data[index - 1].price)) : '#089981'
+            color: index !== 0 ? Number(trade.price) > Number(data[index - 1].price) ? '#089981' : '#f23645' : '#089981'
           })
         })
         setRecentTrades(prevTrades => {
@@ -35,7 +35,7 @@ export const LatestTrades = ({ recentTrades, setRecentTrades }) => {
   const trades = recentTrades.map(trade => (
     <div className={`trade-list__item`} key={uuidv4()}>
       <p>{ trade.time }</p>
-      <p>{ trade.price }</p>
+      <p style={{color: `${trade.color}`}} >{ trade.price }</p>
       <p>{ trade.amount }</p>
     </div>
   ))

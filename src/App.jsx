@@ -65,7 +65,7 @@ function App() {
               time: formatTime(message.T),
               price: message.p,
               amount: cutNumber(Number(message.p) * Number(message.q), 2),
-              color: determineGreenRed(Number(message.p) > Number(prevTrades.at(-1).price))
+              color: Number(message.p) > Number(prevTrades.at(0).price) ? '#089981' : '#f23645'
             },
             ...prevTrades
           ])
