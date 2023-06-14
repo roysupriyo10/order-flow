@@ -64,7 +64,7 @@ const LatestTrades = () => {
   )
 
   const trades = recentTrades.map(trade => (
-    <div style={{ backgroundColor: `${trade.color}` }} className={`trade-list__item`} key={uuidv4()}>
+    <div className={`trade-list__item`} key={uuidv4()}>
       <p>{ trade.time }</p>
       <p>{ trade.price }</p>
       <p>{ trade.amount }</p>
