@@ -5,7 +5,7 @@ import ReconnectingWebSocket from 'reconnecting-websocket'
 import { cutNumber, addPositiveSign, calcCountdown, determineGreenRed, convertToInternationalCurrencySystem } from "../../utils"
 import axios from 'axios'
 
-const Chart = () => {
+export const Chart = () => {
   const chartContainerRef = useRef()
   const [ chartTimeResolution, setChartTimeResolution ] = useState('1m')
 
@@ -113,8 +113,6 @@ const Chart = () => {
 
       // function that will be called when the websocket connection is established
       marketDataSocket.onopen = async () => {
-        // make a request to fetch data from the local server
-
         const data = await makeApiRequest({
           pair: 'BTCUSDT',
           contractType: 'PERPETUAL',
@@ -122,21 +120,6 @@ const Chart = () => {
           limit: '1500'
         }, 'continuousKlines')
 
-        // const response = await axios.request(
-        //   {
-        //     method: 'get',
-        //     maxBodyLength: Infinity,
-        //     params: {
-        //       timeFrame: chartTimeResolution,
-        //       baseUrl: fapi.rest
-        //     },
-        //     url: serverUrl + '/getAllData',
-        //     headers: { }
-        //   }
-        // )
-        // await response and fetch the JSON part
-        // const data = await response.data
-        // candlestick array to be set to the candleSeriesApi
         const historicalCandles = data.map(candle => ({
           time: ( candle[0] + 19800000 ) / 1000,
           open: parseFloat(candle[1]),
@@ -144,7 +127,7 @@ const Chart = () => {
           low: parseFloat(candle[3]),
           close: parseFloat(candle[4])
         }))
-        // volume bars to correspond with the candlesticks
+
         const historicalVolume = data.map(candle => ({
           time: ( candle[0] + 19800000 ) / 1000,
           value: parseInt(candle[5]),
@@ -268,5 +251,3 @@ const Chart = () => {
     <div ref={chartContainerRef} className="chart__container"></div>
   )
 }
-
-export default Chart

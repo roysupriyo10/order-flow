@@ -3,5 +3,5 @@ export const cutNumber = (number, digitsAfterDot) => {
     return Number(number).toFixed(digitsAfterDot)
   }
   const str = `${number}`
-  return str.slice(0, str.indexOf('.') + digitsAfterDot + 1)
+  return Number(str.slice(0, str.indexOf('.') + digitsAfterDot + 1)).toFixed(digitsAfterDot)
 }

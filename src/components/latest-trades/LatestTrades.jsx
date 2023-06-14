@@ -5,8 +5,7 @@ import { v4 as uuidv4 } from 'uuid'
 import './latesttrades.css'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
-const LatestTrades = () => {
-  const [ recentTrades, setRecentTrades ] = useState([])
+export const LatestTrades = ({ recentTrades, setRecentTrades }) => {
 
   useEffect(
     () => {
@@ -33,35 +32,6 @@ const LatestTrades = () => {
     []
   )
 
-  useEffect(
-    () => {
-      const latestTradesSocket = new ReconnectingWebSocket(`${fapi.wss}btcusdt@aggTrade`)
-
-      latestTradesSocket.onopen = () => console.log(`Connection with trades websocket is open...`)
-      latestTradesSocket.onclose = (error) => console.log(`Connection with trades websocket is close. Reason: ${error}`)
-
-      latestTradesSocket.onmessage = (event) => {
-        const message = JSON.parse(event.data)
-        setRecentTrades(prevTrades => {
-          if (prevTrades.length > 149) {
-            prevTrades.splice(149, prevTrades.length)
-          }
-          return ([
-            {
-              time: formatTime(message.T),
-              price: message.p,
-              amount: cutNumber(Number(message.p) * Number(message.q), 2),
-              color: determineGreenRed(Number(message.p) > Number(prevTrades.at(-1).price))
-            },
-            ...prevTrades
-          ])
-        })
-      }
-      return () => latestTradesSocket.close()
-    },
-    []
-  )
-
   const trades = recentTrades.map(trade => (
     <div className={`trade-list__item`} key={uuidv4()}>
       <p>{ trade.time }</p>
@@ -76,5 +46,3 @@ const LatestTrades = () => {
     </div>
   )
 }
-
-export default LatestTrades
