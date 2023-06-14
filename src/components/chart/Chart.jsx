@@ -258,6 +258,7 @@ const Chart = () => {
 
       return () => {
         chartApi.remove()
+        marketDataSocket.close()
       }
     },
     [ chartTimeResolution ]
