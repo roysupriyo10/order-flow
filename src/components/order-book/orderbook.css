@@ -1,7 +1,16 @@
 .order-book__container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  height: 500px
+  height: 500px;
+  overflow-y: scroll;
+}
+
+.bids {
+  background-color: #06ffd52a;
+}
+
+.asks {
+  background-color: #f5262628;
 }
 
 .order-book__list {

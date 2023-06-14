@@ -11,12 +11,12 @@ const OrderBook = () => {
   useEffect(
     () => {
       const getDepthSnapshot = async () => {
-        const data = await makeServerRequest({ symbol: 'BTCUSDT', limit: '1000' }, 'getDepthSnapshot')
+        const data = await makeServerRequest({ symbol: 'BTCUSDT', limit: '10' }, 'getDepthSnapshot')
 
         const bids = data.bids
         const asks = data.asks
 
-        console.log(bids, asks)
+        // console.log(bids, asks)
 
         setOrderBook(prevOrderBook => {
           return ({
@@ -67,12 +67,12 @@ const OrderBook = () => {
 
   return (
     <div className='order-book__container'>
-      <div>
+      <div className='bids'>
         <ul className='order-book__list'>
           {...bids}
         </ul>
       </div>
-      <div>
+      <div className='asks'>
         <ul className='order-book__list'>
           {...asks}
         </ul>
