@@ -1,5 +1,9 @@
 import { createChart, CrosshairMode, ColorType } from "lightweight-charts"
 import { useState, useEffect, useRef } from "react"
+import { fapi } from "../../urls"
+import ReconnectingWebSocket from 'reconnecting-websocket'
+import addPositiveSign from "../../utils/addPositiveSign"
+import cutNumber from "../../utils/cutNumber"
 
 const Chart = () => {
   const chartContainerRef = useRef()
@@ -75,6 +79,73 @@ const Chart = () => {
           precision: 1
         }
       })
+
+      //creating volume series containing the volume bars with the following properties
+      const volumeSeriesApi = chartApi.addHistogramSeries({
+        color: '#26a69a',
+        priceFormat: {
+          type: 'volume',
+        },
+        priceLineVisible: false,
+        priceScaleId: '', // set as an overlay by setting a blank priceScaleId
+      });
+
+      //adjusting the margin to ensure that the volume bars and candlesticks don't overlap each other
+      candleSeriesApi.priceScale().applyOptions({
+        scaleMargins: {
+          top: 0.1,
+          bottom: 0.08
+        }
+      })
+
+      //adjusting the margin to ensure that the candlesticks and volume bars don't overlap each other
+      volumeSeriesApi.priceScale().applyOptions({
+        scaleMargins: {
+          top: 0.8, // highest point of the series will be 90% away from the top
+          bottom: 0,
+        },
+        // ticksVisible: false,
+        // secondsVisible: false,
+      })
+
+      // initialise the websocket with the selected time resolution
+      const marketDataSocket = new ReconnectingWebSocket(`${fapi.wss}ws/btcusdt_perpetual@continuousKline_${chartTimeResolution}`)
+
+      // function that will be called when the websocket connection is established
+      marketDataSocket.onopen = () => {
+        
+      }
+
+      // function that will be called when a new message is received from the websocket
+      marketDataSocket.onmessage = (event) => {
+        // parsing the JSON payload containing the candlesticks
+        const message = JSON.parse(event.data)
+
+        const { t, o, h, l, c, v } = message.k
+
+        const color = parseFloat(c) >= parseFloat(o) ? '#089981' : '#f23645'
+
+        const change = addPositiveSign(cutNumber(parseFloat(c) - parseFloat(o), 2))
+
+
+        candleSeriesApi.update({
+          time: ( t + 19800000 ) / 1000,
+          open: parseFloat(o),
+          high: parseFloat(h),
+          low: parseFloat(l),
+          close: parseFloat(c),
+        });
+
+        // this is to update the volumeseries with the parsed data
+        volumeSeriesApi.update({
+          time: ( t + 19800000 ) / 1000,
+          value: parseInt(v),
+          color: color === '#089981' ? 'rgba(8, 153, 129, 0.5)' : 'rgba(242, 54, 69, 0.5)'
+        });
+
+
+        // console.log(change)
+      }
 
       return () => {
         chartApi.remove()
