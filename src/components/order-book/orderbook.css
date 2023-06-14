@@ -1,0 +1,10 @@
+.order-book__wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+
+.order-book__list-item {
+  display: flex;
+  justify-content: space-between;
+}
