@@ -1,0 +1,1 @@
+export const determineGreenRed = (boolean) => boolean ? '#089981' : 'f23645'
