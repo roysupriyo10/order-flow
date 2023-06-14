@@ -109,7 +109,7 @@ const Chart = () => {
       })
 
       // initialise the websocket with the selected time resolution
-      const marketDataSocket = new ReconnectingWebSocket(`${fapi.wss}ws/btcusdt_perpetual@continuousKline_${chartTimeResolution}`)
+      const marketDataSocket = new ReconnectingWebSocket(`${fapi.wss}btcusdt_perpetual@continuousKline_${chartTimeResolution}`)
 
       // function that will be called when the websocket connection is established
       marketDataSocket.onopen = async () => {

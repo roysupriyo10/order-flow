@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { makeServerRequest } from '../../utils'
+import { fapi, makeServerRequest } from '../../utils'
+import ReconnectingWebSocket from 'reconnecting-websocket'
+
+import './orderbook.css'
 
 const OrderBook = () => {
   const [ orderBook, setOrderBook ] = useState({bids: [], asks: []})
@@ -27,15 +30,50 @@ const OrderBook = () => {
 
   useEffect(
     () => {
-      const subscribeDepth = async () => {
+      const depthSocket = new ReconnectingWebSocket(`${fapi.wss}btcusdt@depth@500ms`)
 
+      depthSocket.onopen = () => console.log(`Connection to depth socket has been established...`)
+
+      depthSocket.onmessage = (event) => {
+        const message = JSON.parse(event.data)
+        const { b, a } = message
+        const newBidPrices = b.map(bid => bid[0])
+        const newAskPrices = a.map(ask => ask[0])
+        console.log(typeof message)
+
+        setOrderBook(prevOrderBook => {
+          const updatedBids = prevOrderBook.bids.filter(bid => !newBidPrices.includes(bid[0])).sort((a, b) => Number(a[0]) < Number(b[0]))
+          const updatedAsks = prevOrderBook.asks.filter(ask => !newAskPrices.includes(ask[0])).sort((a, b) => Number(a[0]) > Number(b[0]))
+          return ({
+            bids: [...updatedBids, ...message.b.sort((a, b) => Number(a[0]) < Number(b[0]))],
+            asks: [...updatedAsks, ...message.a.sort((a, b) => Number(a[0]) > Number(b[0]))]
+          })
+        })
       }
-    }
+
+      depthSocket.onclose = (error) => console.log(`Connection to depth socket has been closed. Reason: ${error}`)
+
+    },
+    []
   )
 
-  return (
-    <div>
+  const asks = orderBook.asks.map(ask => (<li className='order-book__list-item'><p>{ask[0]}</p><p>{ask[1]}</p></li>))
+  const bids = orderBook.bids.map(bid => (<li className='order-book__list-item'><p>{bid[0]}</p><p>{bid[1]}</p></li>))
 
+  return (
+    <div className='order-book__wrapper'>
+      <div>
+        <h2>Bids</h2>
+        <ul className='order-book__list'>
+          {...bids}
+        </ul>
+      </div>
+      <div>
+        <h2>Asks</h2>
+        <ul className='order-book__list'>
+          {...asks}
+        </ul>
+      </div>
     </div>
   )
 }
