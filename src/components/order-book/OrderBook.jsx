@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { fapi, makeServerRequest } from '../../utils'
+import { fapi, makeApiRequest, makeServerRequest } from '../../utils'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -11,7 +11,9 @@ const OrderBook = () => {
   useEffect(
     () => {
       const getDepthSnapshot = async () => {
-        const data = await makeServerRequest({ symbol: 'BTCUSDT', limit: '10' }, 'getDepthSnapshot')
+        const data = await makeApiRequest({ symbol: 'BTCUSDT', limit: '10' }, 'depth')
+
+        console.log(data)
 
         const bids = data.bids
         const asks = data.asks

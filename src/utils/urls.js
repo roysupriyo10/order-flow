@@ -1,5 +1,5 @@
 export const fapi = {
-  rest: 'https://fapi.binance.com/',
+  rest: 'https://fapi.binance.com/fapi/v1/',
   wss: 'wss://fstream.binance.com/ws/',
   // rest: 'https://testnet.binancefuture.com/',
   // wss: 'wss://stream.binancefuture.com/'

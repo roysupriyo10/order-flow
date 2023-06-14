@@ -1,6 +1,6 @@
 import { createChart, CrosshairMode, ColorType } from "lightweight-charts"
 import { useState, useEffect, useRef } from "react"
-import { fapi, serverUrl } from "../../utils/"
+import { fapi, makeApiRequest } from "../../utils/"
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import { cutNumber, addPositiveSign, calcCountdown, determineGreenRed, convertToInternationalCurrencySystem } from "../../utils"
 import axios from 'axios'
@@ -114,20 +114,28 @@ const Chart = () => {
       // function that will be called when the websocket connection is established
       marketDataSocket.onopen = async () => {
         // make a request to fetch data from the local server
-        const response = await axios.request(
-          {
-            method: 'get',
-            maxBodyLength: Infinity,
-            params: {
-              timeFrame: chartTimeResolution,
-              baseUrl: fapi.rest
-            },
-            url: serverUrl + '/getAllData',
-            headers: { }
-          }
-        )
+
+        const data = await makeApiRequest({
+          pair: 'BTCUSDT',
+          contractType: 'PERPETUAL',
+          interval: chartTimeResolution,
+          limit: '1500'
+        }, 'continuousKlines')
+
+        // const response = await axios.request(
+        //   {
+        //     method: 'get',
+        //     maxBodyLength: Infinity,
+        //     params: {
+        //       timeFrame: chartTimeResolution,
+        //       baseUrl: fapi.rest
+        //     },
+        //     url: serverUrl + '/getAllData',
+        //     headers: { }
+        //   }
+        // )
         // await response and fetch the JSON part
-        const data = await response.data
+        // const data = await response.data
         // candlestick array to be set to the candleSeriesApi
         const historicalCandles = data.map(candle => ({
           time: ( candle[0] + 19800000 ) / 1000,
