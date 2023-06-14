@@ -38,7 +38,7 @@ const LatestTrades = () => {
       const latestTradesSocket = new ReconnectingWebSocket(`${fapi.wss}btcusdt@aggTrade`)
 
       latestTradesSocket.onopen = () => console.log(`Connection with trades websocket is open...`)
-      latestTradesSocket.onclose = () => console.log(`Connection with trades websocket is close...`)
+      latestTradesSocket.onclose = (error) => console.log(`Connection with trades websocket is close. Reason: ${error}`)
 
       latestTradesSocket.onmessage = (event) => {
         const message = JSON.parse(event.data)
@@ -46,7 +46,6 @@ const LatestTrades = () => {
           if (prevTrades.length > 149) {
             prevTrades.splice(149, prevTrades.length)
           }
-          console.log(Number(message.p) + ' ' + Number(prevTrades.at(-1).price) + ' ' + (Number(message.p) > Number(prevTrades.at(-1).price)))
           return ([
             {
               time: formatTime(message.T),
