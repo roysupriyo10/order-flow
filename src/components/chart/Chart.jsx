@@ -156,19 +156,19 @@ const Chart = () => {
 
         const color = parseFloat(c) >= parseFloat(o) ? '#089981' : '#f23645'
 
-        const change = addPositiveSign(cutNumber(parseFloat(c) - parseFloat(o), 2))
+        // const change = addPositiveSign(cutNumber(parseFloat(c) - parseFloat(o), 2))
 
-        const percentChange = addPositiveSign(cutNumber(( parseFloat(c) - parseFloat(o) ) / parseFloat(o) * 100, 2))
+        // const percentChange = addPositiveSign(cutNumber(( parseFloat(c) - parseFloat(o) ) / parseFloat(o) * 100, 2))
 
 
-        // prerequisites to update legend
-        const ohlcLegend = `<div>O<span style="color: ${color}">${parseFloat(o).toFixed(1)}</span></div> <div>H<span style="color: ${color}">${parseFloat(h).toFixed(1)}</span></div> <div>L<span style="color: ${color}">${parseFloat(l).toFixed(1)}</span></div> <div>C<span style="color: ${color}">${parseFloat(c).toFixed(1)}</span></div> <span style="color: ${color}">${change}</span> <span style="color: ${color}">(${percentChange}%)</span>`
-        const volumeLegend = `<span style="font-weight: 400; color: ${color}">${convertToInternationalCurrencySystem(v)}</span>`
+        // // prerequisites to update legend
+        // const ohlcLegend = `<div>O<span style="color: ${color}">${parseFloat(o).toFixed(1)}</span></div> <div>H<span style="color: ${color}">${parseFloat(h).toFixed(1)}</span></div> <div>L<span style="color: ${color}">${parseFloat(l).toFixed(1)}</span></div> <div>C<span style="color: ${color}">${parseFloat(c).toFixed(1)}</span></div> <span style="color: ${color}">${change}</span> <span style="color: ${color}">(${percentChange}%)</span>`
+        // const volumeLegend = `<span style="font-weight: 400; color: ${color}">${convertToInternationalCurrencySystem(v)}</span>`
 
-        // updating the legend that displays live candle data
-        if (updateRow !== null) {
-          updateRow.innerHTML = `<div style="display: flex; column-gap: 8px">${symbolName}&nbsp;&nbsp;<span style="display: flex; align-items: center; column-gap: 8px; font-weight: 400; font-size: 13px;padding-top: 1px; transform: scale(1,1.1)">${ohlcLegend}</span></div><span style="font-family: Open Sans">Vol · BTC</span>&nbsp;&nbsp;${volumeLegend}`
-        }
+        // // updating the legend that displays live candle data
+        // if (updateRow !== null) {
+        //   updateRow.innerHTML = `<div style="display: flex; column-gap: 8px">${symbolName}&nbsp;&nbsp;<span style="display: flex; align-items: center; column-gap: 8px; font-weight: 400; font-size: 13px;padding-top: 1px; transform: scale(1,1.1)">${ohlcLegend}</span></div><span style="font-family: Open Sans">Vol · BTC</span>&nbsp;&nbsp;${volumeLegend}`
+        // }
 
         candleSeriesApi.update({
           time: ( t + 19800000 ) / 1000,
@@ -185,58 +185,58 @@ const Chart = () => {
           color: color === '#089981' ? 'rgba(8, 153, 129, 0.5)' : 'rgba(242, 54, 69, 0.5)'
         });
   
-        countDown.innerHTML = calcCountdown(chartTimeResolution)
+        // countDown.innerHTML = calcCountdown(chartTimeResolution)
   
-        timer.style = `
-          top: ${candleSeriesApi.priceToCoordinate(parseFloat(c)) + 15}px;
-          background-color: ${determineGreenRed(parseFloat(c) >= parseFloat(o))}
-        `
+        // timer.style = `
+        //   top: ${candleSeriesApi.priceToCoordinate(parseFloat(c)) + 15}px;
+        //   background-color: ${determineGreenRed(parseFloat(c) >= parseFloat(o))}
+        // `
       }
 
-      // display the symbol name when no data is received
-      const symbolName = `<span style="font-family: Open Sans; font-size: 16px">Bitcoin / TetherUS PERPETUAL FUTURES · ${chartTimeResolution} · BINANCE</span>`
+      // // display the symbol name when no data is received
+      // const symbolName = `<span style="font-family: Open Sans; font-size: 16px">Bitcoin / TetherUS PERPETUAL FUTURES · ${chartTimeResolution} · BINANCE</span>`
 
-      // create the div required to show the countdown timer
-      const timer = document.createElement('div')
-      timer.style = `
-        position: absolute;
-        left: ${chartContainerRef.current.clientWidth - 76}px;
-        top: 45px;
-        z-index: 4;
-        color: white;
-        background-color: #089981;
-        display: inline;
-        font-size: 12px;
-        width: 71px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-bottom-right-radius: 3px;
-        font-family: Azeret Mono
-      `
-      const countDown = document.createElement('div')
-      countDown.innerHTML = 'Hello'
+      // // create the div required to show the countdown timer
+      // const timer = document.createElement('div')
+      // timer.style = `
+      //   position: absolute;
+      //   left: ${chartContainerRef.current.clientWidth - 76}px;
+      //   top: 45px;
+      //   z-index: 4;
+      //   color: white;
+      //   background-color: #089981;
+      //   display: inline;
+      //   font-size: 12px;
+      //   width: 71px;
+      //   display: flex;
+      //   justify-content: center;
+      //   align-items: center;
+      //   border-bottom-right-radius: 3px;
+      //   font-family: Azeret Mono
+      // `
+      // const countDown = document.createElement('div')
+      // countDown.innerHTML = 'Hello'
 
-      timer.appendChild(countDown)
+      // timer.appendChild(countDown)
 
-      chartContainerRef.current.appendChild(timer)
+      // chartContainerRef.current.appendChild(timer)
 
-      // create the required div where the legend will be placed
-      const legend = document.createElement('div');
+      // // create the required div where the legend will be placed
+      // const legend = document.createElement('div');
 
-      // positioning the legend
-      legend.style = `position: absolute; color: #a6a6a6; font-weight: bold; left: 12px; top: 16px; z-index: 1; font-size: 15px; font-family: 'Azeret Mono'; line-height: 25px;`
-      chartContainerRef.current.appendChild(legend);
+      // // positioning the legend
+      // legend.style = `position: absolute; color: #a6a6a6; font-weight: bold; left: 12px; top: 16px; z-index: 1; font-size: 15px; font-family: 'Azeret Mono'; line-height: 25px;`
+      // chartContainerRef.current.appendChild(legend);
 
-      // two divs to switch on and off alternatively for alternate user action (hovering over candles and when not hovering)
-      const hoverRow = document.createElement('div');
-      const updateRow = document.createElement('div');
+      // // two divs to switch on and off alternatively for alternate user action (hovering over candles and when not hovering)
+      // const hoverRow = document.createElement('div');
+      // const updateRow = document.createElement('div');
       
-      // default configuration to be that user is not hovering over select candles
-      updateRow.innerHTML = symbolName;
-      hoverRow.style.display = 'none';
-      legend.appendChild(hoverRow)
-      legend.appendChild(updateRow)
+      // // default configuration to be that user is not hovering over select candles
+      // updateRow.innerHTML = symbolName;
+      // hoverRow.style.display = 'none';
+      // legend.appendChild(hoverRow)
+      // legend.appendChild(updateRow)
 
 
       setTimeout(() => {
