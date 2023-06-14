@@ -13,7 +13,6 @@ const LatestTrades = () => {
       const getRecentTrades = async () => {
         const data = await makeApiRequest({ symbol: 'BTCUSDT', limit: '100' }, 'trades')
 
-        console.log(data)
         const formattedData = data.reverse().map((trade, index) => {
           return ({
             time: formatTime(trade.time),
@@ -65,9 +64,9 @@ const LatestTrades = () => {
   )
 
   const trades = recentTrades.map(trade => (
-    <div className={`trade-list__item`} key={uuidv4()}>
+    <div style={{ backgroundColor: `${trade.color}` }} className={`trade-list__item`} key={uuidv4()}>
       <p>{ trade.time }</p>
-      <p style={{ color: `${trade.color}` }}>{ trade.price }</p>
+      <p>{ trade.price }</p>
       <p>{ trade.amount }</p>
     </div>
   ))

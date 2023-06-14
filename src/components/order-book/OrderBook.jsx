@@ -13,8 +13,6 @@ const OrderBook = () => {
       const getDepthSnapshot = async () => {
         const data = await makeApiRequest({ symbol: 'BTCUSDT', limit: '10' }, 'depth')
 
-        console.log(data)
-
         const bids = data.bids
         const asks = data.asks
 
