@@ -10,7 +10,6 @@ export const OrderBook = ({ orderBook, setOrderBook, latestCandle }) => {
     () => {
       const getDepthSnapshot = async () => {
         const { bids, asks } = await makeApiRequest({ symbol: 'BTCUSDT', limit: '20' }, 'depth')
-
         setOrderBook({ bids, asks })
       }
       getDepthSnapshot()
@@ -47,9 +46,9 @@ export const OrderBook = ({ orderBook, setOrderBook, latestCandle }) => {
 
   return (
     <div className='order-book__container'>
-      <div className='bids'>
+      <div className='asks'>
         <ul className='order-book__list'>
-          {...bids}
+          {...asks}
         </ul>
       </div>
       {/* <div>{addPositiveSign(cutNumber(( basisPoints, 2 )))}</div> */}
@@ -58,9 +57,9 @@ export const OrderBook = ({ orderBook, setOrderBook, latestCandle }) => {
         <p style={{ color: `${latestCandle.color}` }}>{(findRelativePercentage(latestCandle.close, latestCandle.open) >= 0 ? '+' : '') + cutNumber(findRelativePercentage(latestCandle.close, latestCandle.open), 2)}</p>
         <p>{convertToInternationalCurrencySystem(latestCandle.volume)}</p>
       </div>
-      <div className='asks'>
+      <div className='bids'>
         <ul className='order-book__list'>
-          {...asks}
+          {...bids}
         </ul>
       </div>
     </div>

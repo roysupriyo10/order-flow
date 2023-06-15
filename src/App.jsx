@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { OrderBook, LatestTrades } from './components'
+import { OrderBook, LatestTrades, Selector } from './components'
 import { createChart, ColorType, CrosshairMode } from 'lightweight-charts'
 import { fapi, formatTime, cutNumber, convertToInternationalCurrencySystem, makeApiRequest } from './utils'
 import './App.css'
@@ -11,6 +11,7 @@ import ReconnectingWebSocket from 'reconnecting-websocket'
 function App() {
   const [ orderBook, setOrderBook ] = useState({bids: [], asks: []})
   const [ recentTrades, setRecentTrades ] = useState([])
+  const [ recentTradesStore, setRecentTradesStore ] = useState([])
 
   const chartContainerRef = useRef()
   const [ chartTimeResolution, setChartTimeResolution ] = useState('1m')
@@ -34,7 +35,12 @@ function App() {
     color: '#089981'
   })
 
-  console.log(latestCandle)
+  const [ allOrderBookSnapshots, setAllOrderBookSnapshots ] = useState([])
+
+  const [ times, setTimes ] = useState({ orders: 0, trades: 0 })
+
+  // console.log('order-book: ' + allOrderBookSnapshots.length, 'trade-list: ' + recentTrades.length, 'diff: ' + (recentTrades.length - allOrderBookSnapshots.length))
+  // console.log(times, times.orders === times.trades)
 
   useEffect(
     () => {
@@ -44,8 +50,8 @@ function App() {
       depthSocket.onclose = (error) => console.log(`Connection to depth socket has been closed. Reason: ${error}`)
 
       depthSocket.onmessage = (event) => {
-        const { b, a } = JSON.parse(event.data)
-
+        const { b, a, T } = JSON.parse(event.data)
+        setAllOrderBookSnapshots(prevList => [...prevList, { bids: b, asks: a, time: T }])
         setOrderBook({ bids: b, asks: a })
       }
 
@@ -56,6 +62,17 @@ function App() {
 
       latestTradesSocket.onmessage = (event) => {
         const message = JSON.parse(event.data)
+        setRecentTradesStore(prevStore => {
+          return ([
+            {
+              time: formatTime(message.T),
+              price: message.p,
+              amount: cutNumber(Number(message.p) * Number(message.q), 2),
+              color: Number(message.p) > Number(prevStore.at(0).price) ? '#089981' : '#f23645'
+            },
+            ...prevStore
+          ])
+        })
         setRecentTrades(prevTrades => {
           if (prevTrades.length > 149) {
             prevTrades.splice(149, prevTrades.length)
@@ -164,8 +181,6 @@ function App() {
           top: 0.8, // highest point of the series will be 90% away from the top
           bottom: 0,
         },
-        // ticksVisible: false,
-        // secondsVisible: false,
       })
 
       // initialise the websocket with the selected time resolution
@@ -207,20 +222,6 @@ function App() {
 
         const color = parseFloat(c) >= parseFloat(o) ? '#089981' : '#f23645'
 
-        // const change = addPositiveSign(cutNumber(parseFloat(c) - parseFloat(o), 2))
-
-
-        // setBasisPoints(( parseFloat(c) - parseFloat(o) ) / parseFloat(o) * 100 )
-
-
-        // // prerequisites to update legend
-        // const ohlcLegend = `<div>O<span style="color: ${color}">${parseFloat(o).toFixed(1)}</span></div> <div>H<span style="color: ${color}">${parseFloat(h).toFixed(1)}</span></div> <div>L<span style="color: ${color}">${parseFloat(l).toFixed(1)}</span></div> <div>C<span style="color: ${color}">${parseFloat(c).toFixed(1)}</span></div> <span style="color: ${color}">${change}</span> <span style="color: ${color}">(${percentChange}%)</span>`
-        // const volumeLegend = `<span style="font-weight: 400; color: ${color}">${convertToInternationalCurrencySystem(v)}</span>`
-
-        // // updating the legend that displays live candle data
-        // if (updateRow !== null) {
-        //   updateRow.innerHTML = `<div style="display: flex; column-gap: 8px">${symbolName}&nbsp;&nbsp;<span style="display: flex; align-items: center; column-gap: 8px; font-weight: 400; font-size: 13px;padding-top: 1px; transform: scale(1,1.1)">${ohlcLegend}</span></div><span style="font-family: Open Sans">Vol · BTC</span>&nbsp;&nbsp;${volumeLegend}`
-        // }
         const newCandle = {
           time: ( t + 19800000 ) / 1000,
           open: parseFloat(o),
@@ -246,13 +247,6 @@ function App() {
           value: parseInt(v),
           color: color === '#089981' ? 'rgba(8, 153, 129, 0.5)' : 'rgba(242, 54, 69, 0.5)'
         });
-  
-        // countDown.innerHTML = calcCountdown(chartTimeResolution)
-  
-        // timer.style = `
-        //   top: ${candleSeriesApi.priceToCoordinate(parseFloat(c)) + 15}px;
-        //   background-color: ${determineGreenRed(parseFloat(c) >= parseFloat(o))}
-        // `
       }
 
       setTimeout(() => {
@@ -280,6 +274,7 @@ function App() {
     recentTrades,
     setRecentTrades,
     latestCandle,
+    setRecentTradesStore
   }
 
   return (
@@ -287,6 +282,7 @@ function App() {
       <div ref={chartContainerRef} className="chart__container"></div>
       <OrderBook {...props} />
       <LatestTrades {...props} />
+      <Selector />
     </>
   )
 }

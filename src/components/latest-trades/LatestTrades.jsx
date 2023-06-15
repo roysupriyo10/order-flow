@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid'
 import './latesttrades.css'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 
-export const LatestTrades = ({ recentTrades, setRecentTrades }) => {
+export const LatestTrades = ({ recentTrades, setRecentTrades, setRecentTradesStore }) => {
 
   useEffect(
     () => {
@@ -21,6 +21,12 @@ export const LatestTrades = ({ recentTrades, setRecentTrades }) => {
           })
         })
         setRecentTrades(prevTrades => {
+          return ([
+            ...prevTrades,
+            ...formattedData
+          ])
+        })
+        setRecentTradesStore(prevTrades => {
           return ([
             ...prevTrades,
             ...formattedData
