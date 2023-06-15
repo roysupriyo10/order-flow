@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { OrderBook, LatestTrades } from './components'
 import { createChart, ColorType, CrosshairMode } from 'lightweight-charts'
-import { fapi, formatTime, cutNumber, determineGreenRed, makeApiRequest } from './utils'
+import { fapi, formatTime, cutNumber, convertToInternationalCurrencySystem, makeApiRequest } from './utils'
 import './App.css'
 
 
@@ -203,7 +203,7 @@ function App() {
         // parsing the JSON payload containing the candlesticks
         const message = JSON.parse(event.data)
 
-        const { t, o, h, l, c, v } = message.k
+        const { t, o, h, l, c, v, q } = message.k
 
         const color = parseFloat(c) >= parseFloat(o) ? '#089981' : '#f23645'
 
@@ -233,7 +233,7 @@ function App() {
           return ({
             old: prevCandle,
             ...newCandle,
-            volume: parseInt(v),
+            volume: parseInt(q),
             color
           })
         })
