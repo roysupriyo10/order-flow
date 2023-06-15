@@ -1,8 +1,17 @@
-.order-book__container {
+.order-book__container, .order-book__container-list {
   display: grid;
+  overflow-y: scroll;
+}
+
+.order-book__container {
   grid-template-rows: 1fr 2em 1fr;
   height: 500px;
-  overflow-y: scroll;
+}
+
+.order-book__container-list {
+  position: relative;
+  grid-template-rows: 2em 1.2fr 2em 1.2fr;
+  height: 500px;
 }
 
 .bids, .asks {
@@ -28,9 +37,15 @@
 }
 
 .order-book__list-item {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  width: 700px;
+  /* display: grid; */
+  /* grid-template-columns: repeat(5, 1fr); */
+  display: flex;
   text-align: center;
+}
+
+.order-book__list-item p {
+  width: 20%;
 }
 
 .order-book__list-item p {

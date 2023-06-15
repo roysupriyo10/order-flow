@@ -79,7 +79,7 @@ function App() {
           }
           return ([
             {
-              time: formatTime(message.T),
+              time: `${formatTime(message.T)} ms: ${message.T % 1000}`,
               price: message.p,
               amount: cutNumber(Number(message.p) * Number(message.q), 2),
               color: Number(message.p) > Number(prevTrades.at(0).price) ? '#089981' : '#f23645'
@@ -274,6 +274,8 @@ function App() {
     recentTrades,
     setRecentTrades,
     latestCandle,
+    allOrderBookSnapshots,
+    recentTradesStore,
     setRecentTradesStore
   }
 
@@ -282,7 +284,7 @@ function App() {
       <div ref={chartContainerRef} className="chart__container"></div>
       <OrderBook {...props} />
       <LatestTrades {...props} />
-      <Selector />
+      <Selector {...props} />
     </>
   )
 }

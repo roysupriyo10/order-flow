@@ -14,7 +14,7 @@ export const LatestTrades = ({ recentTrades, setRecentTrades, setRecentTradesSto
 
         const formattedData = data.reverse().map((trade, index) => {
           return ({
-            time: formatTime(trade.time),
+            time: `${formatTime(trade.time)} ms: ${trade.time % 1000}`,
             price: trade.price,
             amount: trade.quoteQty,
             color: index !== 0 ? Number(trade.price) > Number(data[index - 1].price) ? '#089981' : '#f23645' : '#089981'
